@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Список задач</h2>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Название</th><th>Срок</th><th>Статус</th></tr>
+    </thead>
+    <tbody id="task-list"></tbody>
+</table>
+<script>
+fetch('/api/tasks')
+  .then(res => res.json())
+  .then(tasks => {
+      const tbody = document.getElementById('task-list');
+      tasks.forEach(task => {
+          const row = tbody.insertRow();
+          row.insertCell(0).innerText = task.title;
+          let dueDate = task.due_date ? task.due_date.split('T')[0] : 'Без срока';
+          row.insertCell(1).innerText = dueDate;
+          row.insertCell(2).innerText = task.is_done ? '✅ Выполнено' : '❌ Не выполнено';
+      });
+  });
+</script>
+{% endblock %}
